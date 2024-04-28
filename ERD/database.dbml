@@ -1,0 +1,52 @@
+Project boggle {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Ecommerce Database
+    **markdown content here**
+  '''
+}
+
+Table "FcmToken" {
+  "fcm_token" varchar [pk]
+  "uuid" integer
+  "service_id" integer
+  "created_at" timestamp
+
+Indexes {
+  service_id [name: "service_id_idx"]
+  uuid [name: "service_idx"]
+}
+}
+
+Table "Service" {
+  "id" integer [pk]
+  "service_name" varchar
+  "private_key" varchar
+  "project_name" varchar
+  "email" varchar
+  "created_at" timestamp
+}
+
+Table "Logs" {
+  "id" integer [pk]
+  "to" varchar
+  "content" text
+  "created_at" timestamp
+  "service_id" integer
+
+Indexes {
+  service_id [name: "service_id_idx"]
+  to [name: "service_idx"]
+}
+}
+
+Table "user" {
+  "uuid" varchar [pk]
+  "created_at" timestamp
+}
+
+
+Ref:"Service_info"."id" < "Logs"."service_id"
+Ref:"Service_info"."id" < "Fcm_user_match"."service_id"
+Ref:"user"."uuid" < "Fcm_user_match"."uuid"
+Ref:"user"."uuid" < "Logs"."uuid"
