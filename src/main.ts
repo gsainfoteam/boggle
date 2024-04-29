@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import expressBasicAuth from 'express-basic-auth';
+import * as expressBasicAuth from 'express-basic-auth';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -9,12 +9,12 @@ async function bootstrap() {
   // swagger auth config
   const configService = app.get(ConfigService);
   app.use(
-    ['/api'],
+    ['/api', '/api-json'],
     expressBasicAuth({
       challenge: true,
       users: {
-        [configService.getOrThrow('SWAGGER_USER')]:
-          configService.getOrThrow('SWAGGER_PASSWORD'),
+        [configService.getOrThrow<string>('SWAGGER_USER')]:
+          configService.getOrThrow<string>('SWAGGER_PASSWORD'),
       },
     }),
   );
