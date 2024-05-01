@@ -18,7 +18,6 @@ model User {
   createdAt DateTime @default(now())
 
   FcmToken FcmToken[]
-  Logs     Logs[]
 }
 
 model Service {
@@ -30,28 +29,29 @@ model Service {
   createdAt   DateTime @default(now())
 
   FcmToken FcmToken[]
-  Logs     Logs[]
 }
 
 model FcmToken {
-  FcmTokenId String
-  createdAt  DateTime @default(now())
+  fcmTokenId   String   @id
+  createdAt    DateTime @default(now())
+  lastCheckAt  DateTime @updatedAt
+  successCount Int      @default(0)
+  failCount    Int      @default(0)
+
+  errors String?
 
   userUuid  String  @db.Uuid
   User      User    @relation(fields: [userUuid], references: [uuid])
   serviceId Int
   Service   Service @relation(fields: [serviceId], references: [id])
-
-  @@id([FcmTokenId, userUuid, serviceId])
+  Logs      Log[]
 }
 
-model Logs {
+model Log {
   id        Int      @id @default(autoincrement())
-  content   String
+  content   Json
   createdAt DateTime @default(now())
 
-  userUuid  String  @db.Uuid
-  User      User    @relation(fields: [userUuid], references: [uuid])
-  serviceId Int
-  Service   Service @relation(fields: [serviceId], references: [id])
+  fcmTokenId String
+  FcmToken   FcmToken @relation(fields: [fcmTokenId], references: [fcmTokenId])
 }

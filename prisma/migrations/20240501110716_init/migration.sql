@@ -20,23 +20,26 @@ CREATE TABLE "Service" (
 
 -- CreateTable
 CREATE TABLE "FcmToken" (
-    "FcmTokenId" TEXT NOT NULL,
+    "fcmTokenId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "lastCheckAt" TIMESTAMP(3) NOT NULL,
+    "successCount" INTEGER NOT NULL DEFAULT 0,
+    "failCount" INTEGER NOT NULL DEFAULT 0,
+    "errors" TEXT,
     "userUuid" UUID NOT NULL,
     "serviceId" INTEGER NOT NULL,
 
-    CONSTRAINT "FcmToken_pkey" PRIMARY KEY ("FcmTokenId","userUuid","serviceId")
+    CONSTRAINT "FcmToken_pkey" PRIMARY KEY ("fcmTokenId")
 );
 
 -- CreateTable
-CREATE TABLE "Logs" (
+CREATE TABLE "Log" (
     "id" SERIAL NOT NULL,
-    "content" TEXT NOT NULL,
+    "content" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userUuid" UUID NOT NULL,
-    "serviceId" INTEGER NOT NULL,
+    "fcmTokenId" TEXT NOT NULL,
 
-    CONSTRAINT "Logs_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Log_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
@@ -46,7 +49,4 @@ ALTER TABLE "FcmToken" ADD CONSTRAINT "FcmToken_userUuid_fkey" FOREIGN KEY ("use
 ALTER TABLE "FcmToken" ADD CONSTRAINT "FcmToken_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Logs" ADD CONSTRAINT "Logs_userUuid_fkey" FOREIGN KEY ("userUuid") REFERENCES "User"("uuid") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Logs" ADD CONSTRAINT "Logs_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "Service"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Log" ADD CONSTRAINT "Log_fcmTokenId_fkey" FOREIGN KEY ("fcmTokenId") REFERENCES "FcmToken"("fcmTokenId") ON DELETE RESTRICT ON UPDATE CASCADE;
