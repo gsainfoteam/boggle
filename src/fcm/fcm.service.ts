@@ -10,7 +10,7 @@ export class FcmService {
 
   async postMessage(
     notification: Notification,
-    service: Service,
+    service: Pick<Service, 'projectName' | 'email' | 'privateKey'>,
     tokens: string[],
     data?: Record<string, string>,
   ): Promise<void> {
