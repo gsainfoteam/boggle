@@ -1,0 +1,27 @@
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Test } from '@nestjs/testing';
+import { FcmRepository } from 'src/fcm/fcm.repository';
+import { FcmService } from 'src/fcm/fcm.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { TestConfigModule } from 'test/config/testConfig.module';
+
+describe('FcmService', () => {
+  let fcmService: FcmService;
+  let configService: ConfigService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      imports: [TestConfigModule, ConfigModule, PrismaModule],
+      providers: [FcmService, ConfigService, FcmRepository],
+    }).compile();
+
+    fcmService = module.get<FcmService>(FcmService);
+    configService = module.get<ConfigService>(ConfigService);
+  });
+
+  it('should be defined', () => {
+    expect(fcmService).toBeDefined();
+    expect(configService).toBeDefined();
+    expect(configService.get('TEST_FCM_TOKEN')).toBeDefined();
+  });
+});
