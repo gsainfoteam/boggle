@@ -7,3 +7,11 @@ export class PostServiceDto {
 
   readonly email: string;
 }
+
+export class PostUserDto {
+  readonly uuid: string;
+
+  readonly service_name: string;
+
+  readonly fcmtoken: string;
+}

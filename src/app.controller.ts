@@ -1,15 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { PostServiceDto } from './dto/app.dto';
+import { PostServiceDto, PostUserDto } from './dto/app.dto';
 import { FcmService } from './fcm/fcm.service';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from './prisma/prisma.service';
+import { NotFoundError } from 'rxjs';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly fcmService: FcmService,
     private prisma: PrismaService,
+    private appService: AppService,
   ) {}
 
   @ApiResponse({
@@ -41,5 +44,10 @@ export class AppController {
       },
     });
     return service;
+  }
+
+  @Post('/user')
+  async PostUser(@Body() dataDto: PostUserDto): Promise<any> {
+    return await this.appService.postuser(dataDto);
   }
 }
