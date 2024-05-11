@@ -10,16 +10,27 @@ export class ServiceController {
     private serviceService: ServiceService,
   ) {}
   @Post('/')
-  async PostService(@Body() dataDto: PostServiceDto): Promise<object> {
-    const service = await this.prisma.service.create({
-      data: {
-        name: dataDto.name,
+  async PostService(@Body() dataDto: PostServiceDto): Promise<any> {
+    const find = await this.prisma.service.findMany({
+      where: {
         privateKey: dataDto.private_key,
         projectName: dataDto.project_name,
         email: dataDto.email,
       },
     });
-    return service;
+    if (!find || !find.length) {
+      const service = await this.prisma.service.create({
+        data: {
+          name: dataDto.name,
+          privateKey: dataDto.private_key,
+          projectName: dataDto.project_name,
+          email: dataDto.email,
+        },
+      });
+      return service;
+    } else {
+      return 'ALREAY EXIST';
+    }
   }
 
   @Post('/:id/push')
