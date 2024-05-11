@@ -1,5 +1,3 @@
-import { Service } from '@prisma/client';
-
 export class PostServiceDto {
   readonly name: string;
 
@@ -8,14 +6,6 @@ export class PostServiceDto {
   readonly project_name: string;
 
   readonly email: string;
-}
-
-export class PostUserDto {
-  readonly uuid: string;
-
-  readonly service_name: string;
-
-  readonly fcmtoken: string;
 }
 
 export class PushMessageDto {
